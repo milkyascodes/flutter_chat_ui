@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const ChatScreen(title: 'Flutter Chat UI'),
+      home: const ChatScreen(title: 'Chat UI'),
     );
   }
 }

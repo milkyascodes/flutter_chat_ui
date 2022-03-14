@@ -38,9 +38,21 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.black,
         elevation: 0,
-        foregroundColor: Colors.black,
+        centerTitle: false,
+        foregroundColor: Colors.white,
+        actions: [
+          Center(
+            child: Chip(
+              backgroundColor: Colors.green[900],
+              label: Text(
+                'Online',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          )
+        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -55,55 +67,7 @@ class _ChatScreenState extends State<ChatScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Expanded(
-              child: GroupedListView<Message, DateTime>(
-                reverse: true,
-                order: GroupedListOrder.DESC,
-                elements: messages,
-                groupBy: (message) => DateTime(
-                  message.date.year,
-                  message.date.month,
-                  message.date.day,
-                ),
-                groupHeaderBuilder: (Message message) => SizedBox(
-                  height: 40,
-                  child: Center(
-                    child: Chip(
-                      backgroundColor: Colors.grey[400],
-                      elevation: 1,
-                      label: Padding(
-                        padding: EdgeInsets.all(3),
-                        child: Text(
-                          message.date.isAfter(
-                                  DateTime.now().subtract(Duration(days: 1)))
-                              ? 'Today'
-                              : DateFormat.yMMMd().format(message.date),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                itemBuilder: (context, Message message) => Align(
-                  alignment: message.isSentByMe
-                      ? Alignment.centerRight
-                      : Alignment.centerLeft,
-                  child: Card(
-                    color: message.isSentByMe ? Colors.teal : Colors.white,
-                    elevation: 4,
-                    child: Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Text(
-                        message.text,
-                        style: TextStyle(
-                          color:
-                              message.isSentByMe ? Colors.white : Colors.black,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            Expanded(child: Chats(messages: messages)),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -115,7 +79,6 @@ class _ChatScreenState extends State<ChatScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
-                      // width: 300,
                       child: TextField(
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
@@ -152,6 +115,59 @@ class _ChatScreenState extends State<ChatScreen> {
               height: 20,
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class Chats extends StatelessWidget {
+  var messages;
+  Chats({Key? key, this.messages}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GroupedListView<Message, DateTime>(
+      reverse: true,
+      order: GroupedListOrder.DESC,
+      elements: messages,
+      groupBy: (message) => DateTime(
+        message.date.year,
+        message.date.month,
+        message.date.day,
+      ),
+      groupHeaderBuilder: (Message message) => SizedBox(
+        height: 40,
+        child: Center(
+          child: Chip(
+            backgroundColor: Colors.grey[400],
+            elevation: 1,
+            label: Padding(
+              padding: EdgeInsets.all(3),
+              child: Text(
+                message.date.isAfter(DateTime.now().subtract(Duration(days: 1)))
+                    ? 'Today'
+                    : DateFormat.yMMMd().format(message.date),
+              ),
+            ),
+          ),
+        ),
+      ),
+      itemBuilder: (context, Message message) => Align(
+        alignment:
+            message.isSentByMe ? Alignment.centerRight : Alignment.centerLeft,
+        child: Card(
+          color: message.isSentByMe ? Colors.teal : Colors.white,
+          elevation: 4,
+          child: Padding(
+            padding: EdgeInsets.all(15),
+            child: Text(
+              message.text,
+              style: TextStyle(
+                color: message.isSentByMe ? Colors.white : Colors.black,
+              ),
+            ),
+          ),
         ),
       ),
     );
