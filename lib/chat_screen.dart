@@ -1,5 +1,7 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, unrelated_type_equality_checks
 
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/messages.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -15,15 +17,6 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  // bool isToday(DateTime date) {
-  //   final now = DateTime.now();
-  //   print('date $date');
-  //   final diff = now.difference(date).inDays;
-  //   print('diff1 ${now.difference(date)}');
-  //   print('diff2 ${now.difference(date).inDays}');
-  //   return diff == 0 && now.day == date.day;
-  // }
-
   List<Message> messages = [
     Message('Hey there!',
         DateTime.now().subtract(Duration(days: 0, minutes: 1)), false),
@@ -45,11 +38,20 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        foregroundColor: Colors.black,
       ),
       body: Container(
         decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage("assets/bg_chat.jpg"), fit: BoxFit.cover)),
+          color: Colors.black,
+          backgroundBlendMode: BlendMode.multiply,
+          image: DecorationImage(
+            image: AssetImage("assets/bg2.jpg"),
+            fit: BoxFit.cover,
+            opacity: .4,
+          ),
+        ),
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -67,7 +69,7 @@ class _ChatScreenState extends State<ChatScreen> {
                   height: 40,
                   child: Center(
                     child: Chip(
-                      backgroundColor: Colors.transparent,
+                      backgroundColor: Colors.grey[400],
                       elevation: 1,
                       label: Padding(
                         padding: EdgeInsets.all(3),
@@ -86,10 +88,17 @@ class _ChatScreenState extends State<ChatScreen> {
                       ? Alignment.centerRight
                       : Alignment.centerLeft,
                   child: Card(
+                    color: message.isSentByMe ? Colors.teal : Colors.white,
                     elevation: 4,
                     child: Padding(
                       padding: EdgeInsets.all(15),
-                      child: Text(message.text),
+                      child: Text(
+                        message.text,
+                        style: TextStyle(
+                          color:
+                              message.isSentByMe ? Colors.white : Colors.black,
+                        ),
+                      ),
                     ),
                   ),
                 ),
@@ -129,6 +138,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       width: 10,
                     ),
                     IconButton(
+                      color: Colors.amber,
                       onPressed: () {},
                       icon: Icon(Icons.send),
                       iconSize: 30,
@@ -147,11 +157,3 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 }
-
-
-// onPressed:(text) {
-//   final newMessage = Message(text, DateTime.now(), true);
-//   setState(() {
-//     messages.add(newMessage);
-//   });
-// };
