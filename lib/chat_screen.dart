@@ -15,9 +15,11 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   var messages = [
-    Message('text', DateTime.now().subtract(Duration(minutes: 1)), false),
-    Message('text', DateTime.now().subtract(Duration(minutes: 1)), true),
-    Message('text', DateTime.now().subtract(Duration(minutes: 1)), false),
+    Message('Cool', DateTime.now().subtract(Duration(minutes: 1)), true),
+    Message('Wanna hang out?', DateTime.now().subtract(Duration(minutes: 1)),
+        false),
+    Message('What\'s up?', DateTime.now().subtract(Duration(minutes: 1)), true),
+    Message('Hey', DateTime.now().subtract(Duration(minutes: 1)), false),
   ].reversed.toList();
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,13 @@ class _ChatScreenState extends State<ChatScreen> {
               elements: messages,
               groupBy: (message) => DateTime(2022),
               groupHeaderBuilder: (Message message) => SizedBox(),
-              itemBuilder: (context, Message message) => Container(),
+              itemBuilder: (context, Message message) => Card(
+                elevation: 4,
+                child: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Text(message.text),
+                ),
+              ),
             ),
           ),
           Container(
