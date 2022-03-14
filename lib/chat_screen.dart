@@ -15,11 +15,14 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  bool isToday(DateTime date) {
-    final now = DateTime.now();
-    final diff = now.difference(date).inDays;
-    return diff == 0 && now.day == date.day;
-  }
+  // bool isToday(DateTime date) {
+  //   final now = DateTime.now();
+  //   print('date $date');
+  //   final diff = now.difference(date).inDays;
+  //   print('diff1 ${now.difference(date)}');
+  //   print('diff2 ${now.difference(date).inDays}');
+  //   return diff == 0 && now.day == date.day;
+  // }
 
   List<Message> messages = [
     Message('Hey there!',
@@ -43,7 +46,10 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Padding(
+      body: Container(
+        decoration: BoxDecoration(
+            image: DecorationImage(
+                image: AssetImage("assets/bg_chat.jpg"), fit: BoxFit.cover)),
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
@@ -61,14 +67,18 @@ class _ChatScreenState extends State<ChatScreen> {
                   height: 40,
                   child: Center(
                     child: Chip(
-                        backgroundColor: Colors.transparent,
-                        elevation: 1,
-                        label: Padding(
-                            padding: EdgeInsets.all(3),
-                            child: isToday(message.date)
-                                ? Text('Today')
-                                : Text(
-                                    DateFormat.yMMMd().format(message.date)))),
+                      backgroundColor: Colors.transparent,
+                      elevation: 1,
+                      label: Padding(
+                        padding: EdgeInsets.all(3),
+                        child: Text(
+                          message.date.isAfter(
+                                  DateTime.now().subtract(Duration(days: 1)))
+                              ? 'Today'
+                              : DateFormat.yMMMd().format(message.date),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
                 itemBuilder: (context, Message message) => Align(
