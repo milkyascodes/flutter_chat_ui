@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, unrelated_type_equality_checks
 
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/messages.dart';
@@ -15,9 +15,17 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  bool isToday(DateTime date) {
+    final now = DateTime.now();
+    final diff = now.difference(date).inDays;
+    return diff == 0 && now.day == date.day;
+  }
+
   List<Message> messages = [
-    Message('Hey there!', DateTime.now().subtract(Duration(minutes: 1)), false),
-    Message('Hello', DateTime.now().subtract(Duration(minutes: 1)), true),
+    Message('Hey there!',
+        DateTime.now().subtract(Duration(days: 0, minutes: 1)), false),
+    Message(
+        'Hello', DateTime.now().subtract(Duration(days: 0, minutes: 1)), true),
     Message('Great see you then.',
         DateTime.now().subtract(Duration(minutes: 1)), false),
     Message('I am available at 1:00 PM.',
@@ -56,9 +64,11 @@ class _ChatScreenState extends State<ChatScreen> {
                         backgroundColor: Colors.transparent,
                         elevation: 1,
                         label: Padding(
-                          padding: EdgeInsets.all(3),
-                          child: Text(DateFormat.yMMMd().format(message.date)),
-                        )),
+                            padding: EdgeInsets.all(3),
+                            child: isToday(message.date)
+                                ? Text('Today')
+                                : Text(
+                                    DateFormat.yMMMd().format(message.date)))),
                   ),
                 ),
                 itemBuilder: (context, Message message) => Align(
@@ -88,16 +98,22 @@ class _ChatScreenState extends State<ChatScreen> {
                     Expanded(
                       // width: 300,
                       child: TextField(
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                            filled: true,
-                            fillColor: Colors.grey.shade300,
-                            // focusedBorder: InputBorder.none,
-                            contentPadding: EdgeInsets.all(12),
-                            hintText: 'Type your message here..'),
-                      ),
+                          decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey.shade300,
+                              // focusedBorder: InputBorder.none,
+                              contentPadding: EdgeInsets.all(12),
+                              hintText: 'Type your message here..'),
+                          onSubmitted: (text) {
+                            final newMessage =
+                                Message(text, DateTime.now(), true);
+                            setState(() {
+                              messages.add(newMessage);
+                            });
+                          }),
                     ),
                     SizedBox(
                       width: 10,
