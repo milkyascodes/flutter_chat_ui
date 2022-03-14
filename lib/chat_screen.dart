@@ -15,11 +15,9 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  var messages = [
-    Message('Hey there!',
-        DateTime.now().subtract(Duration(days: -1, minutes: 1)), false),
-    Message(
-        'Hello', DateTime.now().subtract(Duration(days: -1, minutes: 1)), true),
+  List<Message> messages = [
+    Message('Hey there!', DateTime.now().subtract(Duration(minutes: 1)), false),
+    Message('Hello', DateTime.now().subtract(Duration(minutes: 1)), true),
     Message('Great see you then.',
         DateTime.now().subtract(Duration(minutes: 1)), false),
     Message('I am available at 1:00 PM.',
@@ -43,6 +41,8 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Expanded(
               child: GroupedListView<Message, DateTime>(
+                reverse: true,
+                order: GroupedListOrder.DESC,
                 elements: messages,
                 groupBy: (message) => DateTime(
                   message.date.year,
@@ -53,10 +53,12 @@ class _ChatScreenState extends State<ChatScreen> {
                   height: 40,
                   child: Center(
                     child: Chip(
+                        backgroundColor: Colors.transparent,
+                        elevation: 1,
                         label: Padding(
-                      padding: EdgeInsets.all(3),
-                      child: Text(DateFormat.yMMMd().format(message.date)),
-                    )),
+                          padding: EdgeInsets.all(3),
+                          child: Text(DateFormat.yMMMd().format(message.date)),
+                        )),
                   ),
                 ),
                 itemBuilder: (context, Message message) => Align(
@@ -74,16 +76,56 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
             Container(
-              color: Colors.grey[300],
-              child: TextField(
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(12),
-                    hintText: 'Type your message here..'),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.transparent,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      // width: 300,
+                      child: TextField(
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey.shade300,
+                            // focusedBorder: InputBorder.none,
+                            contentPadding: EdgeInsets.all(12),
+                            hintText: 'Type your message here..'),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.send),
+                      iconSize: 30,
+                      splashRadius: 10,
+                    )
+                  ],
+                ),
               ),
             ),
+            SizedBox(
+              height: 20,
+            )
           ],
         ),
       ),
     );
   }
 }
+
+
+// onPressed:(text) {
+//   final newMessage = Message(text, DateTime.now(), true);
+//   setState(() {
+//     messages.add(newMessage);
+//   });
+// };
