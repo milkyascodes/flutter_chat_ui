@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/messages.dart';
+import 'package:grouped_list/grouped_list.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({Key? key, required this.title}) : super(key: key);
@@ -13,7 +14,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  var message = [
+  var messages = [
     Message('text', DateTime.now().subtract(Duration(minutes: 1)), false),
     Message('text', DateTime.now().subtract(Duration(minutes: 1)), true),
     Message('text', DateTime.now().subtract(Duration(minutes: 1)), false),
@@ -24,13 +25,25 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            Expanded(child: Container()),
-            Container(),
-          ],
-        ),
+      body: Column(
+        children: [
+          Expanded(
+            child: GroupedListView<Message, DateTime>(
+              elements: messages,
+              groupBy: (message) => DateTime(2022),
+              groupHeaderBuilder: (Message message) => SizedBox(),
+              itemBuilder: (context, Message message) => Container(),
+            ),
+          ),
+          Container(
+            color: Colors.grey[300],
+            child: TextField(
+              decoration: InputDecoration(
+                  contentPadding: EdgeInsets.all(12),
+                  hintText: 'Type your message here..'),
+            ),
+          ),
+        ],
       ),
     );
   }
