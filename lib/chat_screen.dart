@@ -15,6 +15,12 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   var messages = [
+    Message('Hey there!', DateTime.now().subtract(Duration(minutes: 1)), false),
+    Message('Hello', DateTime.now().subtract(Duration(minutes: 1)), true),
+    Message('Great see you then.',
+        DateTime.now().subtract(Duration(minutes: 1)), false),
+    Message('I am available at 1:00 PM.',
+        DateTime.now().subtract(Duration(minutes: 1)), true),
     Message('Cool', DateTime.now().subtract(Duration(minutes: 1)), true),
     Message('Wanna hang out?', DateTime.now().subtract(Duration(minutes: 1)),
         false),
@@ -27,31 +33,39 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: GroupedListView<Message, DateTime>(
-              elements: messages,
-              groupBy: (message) => DateTime(2022),
-              groupHeaderBuilder: (Message message) => SizedBox(),
-              itemBuilder: (context, Message message) => Card(
-                elevation: 4,
-                child: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Text(message.text),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: GroupedListView<Message, DateTime>(
+                elements: messages,
+                groupBy: (message) => DateTime(2022),
+                groupHeaderBuilder: (Message message) => SizedBox(),
+                itemBuilder: (context, Message message) => Align(
+                  alignment: message.isSentByMe
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  child: Card(
+                    elevation: 4,
+                    child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Text(message.text),
+                    ),
+                  ),
                 ),
               ),
             ),
-          ),
-          Container(
-            color: Colors.grey[300],
-            child: TextField(
-              decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(12),
-                  hintText: 'Type your message here..'),
+            Container(
+              color: Colors.grey[300],
+              child: TextField(
+                decoration: InputDecoration(
+                    contentPadding: EdgeInsets.all(12),
+                    hintText: 'Type your message here..'),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
